@@ -1,5 +1,5 @@
 ;;;
-;;; Tøída point
+;;; Trida point
 ;;;
 
 (defclass point () 
@@ -34,5 +34,5 @@
    (radius :initform 1)))
 
 
-;;; vim: fenc=cp1250
+;;; vim: fenc=utf-8
 

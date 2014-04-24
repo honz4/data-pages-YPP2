@@ -1,6 +1,6 @@
 ;; -*- mode: lisp; encoding: utf-8; -*-
 ;;;
-;;; Tøída point
+;;; TÅ™Ã­da point
 ;;;
 
 (defclass point () 
@@ -11,8 +11,8 @@
    (window :initform nil)))
 
 ;;
-;; Ètení a nastavování základních dat 
-;; (sloty, polární souøadnice)
+;; ÄŒtenÃ­ a nastavovÃ¡nÃ­ zÃ¡kladnÃ­ch dat 
+;; (sloty, polÃ¡rnÃ­ souÅ™adnice)
 ;;
 
 (defmethod x ((point point))
@@ -108,10 +108,10 @@
 
 
 ;;
-;; Kreslení
+;; KreslenÃ­
 ;;
 
-;; U bodu kreslíme plnou krunici s polomìrem rovnım thickness
+;; U bodu kreslÃ­me plnou kruÅ¾nici s polomÄ›rem rovnÃ½m thickness
 (defmethod set-mg-params ((pt point)) 
   (let ((mgw (shape-mg-window pt)))
     (mg:set-param mgw :foreground (color pt)) 
@@ -130,7 +130,7 @@
 
 
 ;;;
-;;; Tøída circle
+;;; TÅ™Ã­da circle
 ;;;
 
 (defclass circle () 
@@ -186,7 +186,7 @@
     (mg-window (window c))))
 
 ;;
-;; Kreslení
+;; KreslenÃ­
 ;;
 
 (defmethod set-mg-params ((c circle))
@@ -225,7 +225,7 @@
   c)
 
 ;;;
-;;; Tøída picture
+;;; TÅ™Ã­da picture
 ;;;
 
 (defclass picture ()
@@ -264,7 +264,7 @@
   pic)
 
 ;;
-;; Kreslení
+;; KreslenÃ­
 ;;
 
 (defmethod draw ((pic picture))
@@ -293,7 +293,7 @@
 
 
 ;;;
-;;; Tøída polygon
+;;; TÅ™Ã­da polygon
 ;;;
 
 (defclass polygon ()
@@ -359,7 +359,7 @@
     (mg-window (window shape))))
 
 ;; 
-;; Kreslení
+;; KreslenÃ­
 ;;
 
 (defmethod set-mg-params ((poly polygon)) 
@@ -401,7 +401,7 @@
   poly)
 
 ;;;
-;;; Tøída window
+;;; TÅ™Ã­da window
 ;;;
 
 (defclass window ()
@@ -449,4 +449,4 @@
 |#
 
 
-;;; vim: fenc=cp1250
+;;; vim: fenc=utf8

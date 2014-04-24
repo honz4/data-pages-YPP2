@@ -1,7 +1,7 @@
 ;; -*- mode: lisp; encoding: utf-8; -*-
-;; vim: fenc=cp1250
+;; vim: fenc=utf-8
 ;;;
-;;; Tøída mg-object
+;;; TÅ™Ã­da mg-object
 ;;;
 
 (defclass mg-object () 
@@ -92,7 +92,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; Tøída shape
+;;; TÅ™Ã­da shape
 ;;;
 
 (defclass shape (mg-object)
@@ -177,7 +177,7 @@
   (do-draw shape))
 
 ;;
-;; Události
+;; UdÃ¡losti
 ;;
 
 (defmethod contains-point-p ((shape shape) point)
@@ -189,7 +189,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; Tøída point
+;;; TÅ™Ã­da point
 ;;;
 
 (defclass point (shape) 
@@ -197,8 +197,8 @@
    (y :initform 0)))
 
 ;;
-;; Ètení a nastavování základních data
-;; (sloty, polární souøadnice)
+;; ÄŒtenÃ­ a nastavovÃ¡nÃ­ zÃ¡kladnÃ­ch data
+;; (sloty, polÃ¡rnÃ­ souÅ™adnice)
 ;;
 
 (defmethod x ((point point)) 
@@ -280,10 +280,10 @@
     (move pt cx cy)))
 
 ;;
-;; Kreslení
+;; KreslenÃ­
 ;;
 
-;; U bodu kreslíme plnou kružnici s polomìrem rovným thickness
+;; U bodu kreslÃ­me plnou kruÅ¾nici s polomÄ›rem rovnÃ½m thickness
 (defmethod set-mg-params ((pt point))
   (call-next-method)
   (mg:set-param (shape-mg-window pt) :filledp t))
@@ -295,7 +295,7 @@
                   (thickness pt)))
 
 ;;
-;; Události
+;; UdÃ¡losti
 ;;
 
 (defmethod contains-point-p ((shape point) point)
@@ -304,7 +304,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; Tøída circle
+;;; TÅ™Ã­da circle
 ;;;
 
 (defclass circle (shape) 
@@ -329,7 +329,7 @@
   c)
 
 ;;
-;; Kreslení
+;; KreslenÃ­
 ;;
 
 (defmethod do-draw ((c circle))
@@ -355,7 +355,7 @@
   c)
 
 ;;
-;; Události:
+;; UdÃ¡losti:
 ;;
 
 (defmethod ev-changing ((c circle) sender message 
@@ -428,7 +428,7 @@
   shape)
 
 ;;
-;; Události
+;; UdÃ¡losti
 ;;
 
 (defmethod ev-changing ((cs compound-shape) sender message 
@@ -441,7 +441,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; Tøída picture
+;;; TÅ™Ã­da picture
 ;;;
 
 (defclass picture (compound-shape)
@@ -487,7 +487,7 @@
   (call-next-method))
 
 ;;
-;; Kreslení
+;; KreslenÃ­
 ;;
 
 (defmethod do-draw ((pic picture))
@@ -495,7 +495,7 @@
     (draw item)))
 
 ;;
-;; Události
+;; UdÃ¡losti
 ;;
 
 (defmethod mouse-down ((p picture) button position)
@@ -516,7 +516,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; Trída polygon
+;;; TrÃ­da polygon
 ;;;
 
 (defclass polygon (compound-shape)
@@ -538,7 +538,7 @@
     (setf (slot-value p 'closedp) value)))
 
 ;;
-;; Kreslení
+;; KreslenÃ­
 ;;
 
 (defmethod set-mg-params ((poly polygon)) 
@@ -554,7 +554,7 @@
                      coordinates)))
 
 ;;
-;; contains-point-p pro polygon je trochu sloÅ¾itÄ›jÅ¡Ã­
+;; contains-point-p pro polygon je trochu sloÄ¹Ä¾itÃ„â€ºjÄ¹Ë‡Ä‚Â­
 ;;
 
 (defun scalar-product (v1 v2)
@@ -671,7 +671,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; Tøída window
+;;; TÅ™Ã­da window
 ;;;
 
 (defclass window (mg-object)
@@ -740,7 +740,7 @@
     (mouse-down (shape w) button position)))
 
 ;;
-;; Události
+;; UdÃ¡losti
 ;;
 
 (defmethod ev-change ((w window) sender message &rest args)

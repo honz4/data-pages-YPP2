@@ -1,5 +1,5 @@
 ;;;
-;;; Tøída point
+;;; TÅ™Ã­da point
 ;;;
 
 (defclass point () 
@@ -48,7 +48,7 @@
   (set-r-phi point (r point) value))
 
 ;;;
-;;; Tøída circle
+;;; TÅ™Ã­da circle
 ;;;
 
 (defclass circle () 
@@ -68,7 +68,7 @@
   c)
 
 ;;;
-;;; Tøída picture
+;;; TÅ™Ã­da picture
 ;;;
 (defclass picture ()
   ((items :initform '())))
@@ -87,5 +87,5 @@
   pic)
 
 
-;;; vim: fenc=cp1250
+;;; vim: fenc=utf-8
 
