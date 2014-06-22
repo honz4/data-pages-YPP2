@@ -1,0 +1,18 @@
+<code lisp>
+DISPLAY-WINDOW     => win
+CLOSE-WINDOW          win
+GET-CALLBACK
+SET-CALLBACK
+GET-PARAM             win :thickness :{fore,back}ground :{filled,closed}p
+SET-PARAM             win param value
+INVALIDATE
+CLEAR                 win => nil
+DRAW-WINDOW
+DRAW-POLYGON          win points => nil points := '(x1 y1 x2 y2 ...)
+DRAW-CIRCLE           win x y r  => nil
+DRAW-STRING
+GET-STRING-EXTENT 
+GET-IMAGE-EXTENT
+RAW-IMAGE
+MAKE-OFFSCREEN-WINDOW
+</code>

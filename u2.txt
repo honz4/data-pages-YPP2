@@ -1,0 +1,192 @@
+======Úkol č. 2 – Evidence alb======
+Cílem prvního úkolu je implementovat jednoduchou evidenci alb, podobnou té, kterou jste
+řešili v předmětu PP1. Při řešení dodržujte principy, se kterými jsme se dosud seznámili.
+
+Podrobnosti:
+Všechny metody, které něco nastavují, musí testovat správnost vstupu a jako výsledek
+musí vracet instanci, ve které došlo ke změně.
+Implementujte třídu [[#time-spec]] pro reprezentaci času, pro účely evidence délky skladby.
+
+Třída bude obsahovat sloty min a sec.
+Metody:
+t-min, t-sec pro zjištění minut, resp sekund
+set-min, set-sec pro nastavení minut, resp. sekund.
+time-in-seconds, set-time-in-seconds pro zjištění, resp. nastavení času v
+sekundách.
+Napište si též pomocnou funkci make-time, která vyrobí instanci a nastaví hodnoty slotů.
+Příklady volání:
+<code>
+CL-USER 10 > (setf *x* (make-instance 'time-spec))
+#<TIME-SPEC 200DF9FB>
+CL-USER 11 > (set-min *x* 3)
+#<TIME-SPEC 200DF9FB>
+CL-USER 12 > (set-sec *x* 30)
+#<TIME-SPEC 200DF9FB>
+CL-USER 13 > (inspect *x*)
+#<TIME-SPEC 200DF9FB> is a TIME-SPEC
+MIN
+3
+SEC
+30
+CL-USER 15 : Inspect 1 > :q
+#<TIME-SPEC 200DF9FB>
+CL-USER 16 > (time-in-seconds *x*)
+210
+CL-USER 17 > (make-time 5 15)
+#<TIME-SPEC 21192B0F>
+CL-USER 18 > (inspect *)
+#<TIME-SPEC 21192B0F> is a TIME-SPEC
+MIN
+5
+SEC
+15
+
+======Třída track======
+Třída track bude reprezentovat skladbu a bude obsahovat
+  * sloty name pro název skladby
+  * a len pro délku skladby. Délka skladby bude instancí třídy [[#time-spec]].
+  * Napište metody name a len pro čtení příslušných slotů
+  * a metody set-name a set-len pro nastavování slotů.
+  * Napište metodu print-track, která vytiskne informace o skladbě. Pro tisk použijte
+funkci format. Jak formátovací řetězec můžete použít například "~A~1,40T~2D:~2D~
+%" – nastudujte v [[CLHS>format]], co znamená a případně si jej upravte dle potřeby.
+Napište pomocnou funkci make-track, podobně jako make-time u času.
+
+Příklady volání:
+<code>
+CL-USER 31 > (make-track "Pharaoh Dance" (make-time 3 20))
+#<TRACK 2010AEC3>
+CL-USER 32 > (inspect *)
+#<TRACK 2010AEC3> is a TRACK
+NAME
+"Pharaoh Dance"
+LEN
+#<TIME-SPEC 2010AEDF>
+CL-USER 20 > (setf *track* (make-track "Pharaoh Dance" (make-time 3
+20)))
+#<TRACK 2120A137>
+CL-USER 21 > (name *track*)
+"Pharaoh Dance"
+CL-USER 22 > (len *track*)
+#<TIME-SPEC 2120A16F>
+CL-USER 25 > (t-min (len *track*))
+3
+CL-USER 26 > (t-sec (len *track*))
+20
+CL-USER 27 > (print-track *track*)
+Pharaoh Dance
+#<TRACK 2120A137>
+
+3:20
+
+CL-USER 29 > (set-name *track* "New Name")
+#<TRACK 2109E50F>
+CL-USER 30 > (name *track*)
+"New Name"
+</code>
+
+======album=====
+Vytvoře třídy album pro reprezentaci alba. Třída bude mít sloty artist (interpret), title
+(název alba), tracks (seznam skladeb), a year-of-release (rok vydání).
+Napište
+  * metody pro čtení a nastavování hodnot slotů,
+  * dále metodu track-count pro zjištění počtu skladeb alba a
+  * metodu album-length, která vráti celkovou délku alba jako instanci třídy time-spec.
+Také napište metody print-album, která vytiskne informaci o albu, viz příklady volání níže:
+<code>
+CL-USER 38 > (setf *album*
+(make-album "Miles Davis"
+"Bitches Brew"
+(list (make-track
+05))
+(make-track
+(make-track
+(make-track
+(make-track
+time 14 01))
+(make-track
+(make-track
+1969))
+
+"Pharaoh's Dance" (make-time 20
+"Bitches Brew" (make-time 26 58))
+"Spanish Key" (make-time 17 32))
+"John McLaughlin" (make-time 4 22))
+"Miles Runs the Voodoo Down" (make"Sanctuary" (make-time 10 56))
+"Feio" (make-time 11 49)))
+
+#<ALBUM 200F2E9F>
+CL-USER 39 > (track-count *album*)
+7
+CL-USER 40 > (tracks *album*)
+(#<TRACK 200F295B> #<TRACK 200F2923> #<TRACK 200F28EB> #<TRACK 200F28B3>
+#<TRACK 200F287B> #<TRACK 200F2843> #<TRACK 200F280B>)
+CL-USER 41 > (album-length *album*)
+#<TIME-SPEC 200CD663>
+CL-USER 42 > (print-album *album*)
+Album Bitches Brew by Miles Davis, released 1969.
+1. Pharaoh's Dance
+2. Bitches Brew
+3. Spanish Key
+4. John McLaughlin
+5. Miles Runs the Voodoo Down
+6. Sanctuary
+7. Feio
+Total length:105:43
+
+20: 5
+26:58
+17:32
+4:22
+14: 1
+10:56
+11:49
+</code>
+
+Program nesmí hlásit žádné chyby ani upozornění (warning) při kompilaci. Výstup při
+kompilaci by měl vypadat nějak takto:
+<code>
+;;; Safety = 3, Speed = 1, Space = 1, Float = 1, Interruptible = 0
+;;; Compilation speed = 1, Debug = 2, Fixnum safety = 3
+;;; Source level debugging is on
+;;; Source file recording is on
+;;; Cross referencing is on
+; (TOP-LEVEL-FORM 1)
+; (DEFCLASS TIME-SPEC)
+; (METHOD T-MIN (TIME-SPEC))
+; (METHOD T-SEC (TIME-SPEC))
+; MINUTE-P
+; SECOND-P
+; (METHOD SET-SEC (TIME-SPEC T))
+; (METHOD SET-MIN (TIME-SPEC T))
+; MS-TO-SEC
+; (METHOD TIME-IN-SECONDS (TIME-SPEC))
+; SEC-TO-MIN
+; (METHOD SET-TIME-IN-SECONDS (TIME-SPEC T))
+; MAKE-TIME
+; (DEFCLASS TRACK)
+; TRACK-P
+; (METHOD NAME (TRACK))
+; (METHOD LEN (TRACK))
+; (METHOD SET-NAME (TRACK T))
+; (METHOD SET-LEN (TRACK T))
+; MAKE-TRACK
+; (METHOD PRINT-TRACK (TRACK))
+; MAKE-TRACKS
+; (DEFCLASS ALBUM)
+; (METHOD ARTIST (ALBUM))
+; (METHOD TITLE (ALBUM))
+; (METHOD TRACKS (ALBUM))
+; (METHOD YEAR-OF-RELEASE (ALBUM))
+; (METHOD SET-ARTIST (ALBUM T))
+; (METHOD SET-TITLE (ALBUM T))
+; (METHOD SET-TRACKS (ALBUM T))
+; (METHOD PRINT-ALBUM (ALBUM))
+; YEAR-OF-RELEASE-P
+; (METHOD SET-YEAR-OF-RELEASE (ALBUM T))
+; MAKE-ALBUM
+; (METHOD TRACK-COUNT (ALBUM))
+; (METHOD ALBUM-LENGTH (ALBUM))
+
+---- Press space to continue ----
+</code>

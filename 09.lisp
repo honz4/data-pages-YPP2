@@ -1,9 +1,22 @@
 ;; -*- mode: lisp; encoding: utf-8; -*-
 ;; vim: fenc=utf-8
-;;;
-;;; Třída mg-object
-;;;
 
+;======Třída mg-object======
+;/*
+;@startuml 09.png
+;class mg_object {
+; -delegate : bool
+; -events :    list
+; -change-level : int
+; delegate() : mg-object
+; delegate() : mg-object
+; set-delegate(mg-object)
+; events() : list
+; set-events(list) : mg-object
+; canonicalize-events(events) : list
+;}
+;@enduml
+;*/
 (defclass mg-object () 
   ((delegate :initform nil)
    (events :initform '())
@@ -90,10 +103,20 @@
                      ,message
                      ,@msg-args))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; Třída shape
-;;;
+;======Třída shape======
+;/*
+;@startuml 09.png
+;class shape <|-- mg_object
+;class shape {
+; -color : color
+; -thickness : int
+; -filledp   : bool
+; -window    : mg-window
+; window() : mg-window
+; set-window(mg-window) : shape
+;}
+;@enduml
+;*/
 
 (defclass shape (mg-object)
   ((color :initform :black)
@@ -176,9 +199,7 @@
   (set-mg-params shape)
   (do-draw shape))
 
-;;
-;; Události
-;;
+;======Události======
 
 (defmethod contains-point-p ((shape shape) point)
   nil)
@@ -186,20 +207,18 @@
 (defmethod mouse-down ((shape shape) button position)
   (send-event shape 'ev-mouse-down shape button position))
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; Třída point
-;;;
+;======Třída point======
+;/*
+;@startuml 09.png
+;class point <|-- shape
+;@enduml
+;*/
 
 (defclass point (shape) 
   ((x :initform 0) 
    (y :initform 0)))
 
-;;
-;; Čtení a nastavování základních data
-;; (sloty, polární souřadnice)
-;;
+;Čtení a nastavování základních data (sloty, polární souřadnice)
 
 (defmethod x ((point point)) 
   (slot-value point 'x)) 
@@ -256,9 +275,7 @@
     (set-r-phi point (r point) value) 
     value))
 
-;;
-;; Transformace
-;;
+;Transformace
 
 (defmethod do-move ((pt point) dx dy)
   (set-x pt (+ (x pt) dx))
@@ -279,9 +296,7 @@
     (set-r pt (* (r pt) coeff))
     (move pt cx cy)))
 
-;;
-;; Kreslení
-;;
+;Kreslení
 
 ;; U bodu kreslíme plnou kružnici s poloměrem rovným thickness
 (defmethod set-mg-params ((pt point))
@@ -294,18 +309,18 @@
                   (y (y pt)) 
                   (thickness pt)))
 
-;;
-;; Události
-;;
+;Události
 
 (defmethod contains-point-p ((shape point) point)
   (<= (point-sq-dist shape point) 
       (sqr (thickness shape))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; Třída circle
-;;;
+;======Třída circle======
+;/*
+;@startuml 09.png
+;class circle <|-- shape
+;@enduml
+;*/
 
 (defclass circle (shape) 
   ((center :initform (make-instance 'point)) 
@@ -328,18 +343,14 @@
     (set-delegate center c))
   c)
 
-;;
 ;; Kreslení
-;;
 
 (defmethod do-draw ((c circle))
   (mg:draw-circle (shape-mg-window c)
                   (x (center c))
                   (y (center c))
                   (radius c)))
-;;
 ;; Transformace
-;;
 
 (defmethod do-move ((c circle) dx dy)
   (move (center c) dx dy)
@@ -354,9 +365,7 @@
   (set-radius c (* (radius c) coeff))
   c)
 
-;;
 ;; Události:
-;;
 
 (defmethod ev-changing ((c circle) sender message 
 			&rest message-args)
@@ -376,10 +385,12 @@
 	       sq-dist))
          (<= sq-dist (sqr (radius circle))))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; compound-shape
-;;;
+;======compound-shape======
+;/*
+;@startuml 09.png
+;class compound_shape <|-- shape
+;@enduml
+;*/
 
 (defclass compound-shape (shape)
   ((items :initform '())))
@@ -411,9 +422,7 @@
     (do-set-items shape value))
   shape)
 
-;;
 ;; Transformace
-;;
 
 (defmethod do-move ((shape compound-shape) dx dy)
   (send-to-items shape #'move dx dy)
@@ -427,9 +436,7 @@
   (send-to-items shape #'scale coeff center)
   shape)
 
-;;
 ;; Události
-;;
 
 (defmethod ev-changing ((cs compound-shape) sender message 
 			&rest message-args)
@@ -439,10 +446,16 @@
 		      &rest message-args)
   (change cs 'ev-change sender message message-args))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; Třída picture
-;;;
+;======Třída picture======
+;/*
+;@startuml 09.png
+;class picture <|-- compound_shape
+;class picture {
+; -propagate-color-p : bool
+;  propagate-color-p() : bool
+;}
+;@enduml
+;*/
 
 (defclass picture (compound-shape)
   ((propagate-color-p :initform nil)))

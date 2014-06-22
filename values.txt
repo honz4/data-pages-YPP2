@@ -1,0 +1,3 @@
+  * [[https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node94.html]]
+  * [[clhs>Body/03_ag.htm|Return values]]
+  * [[so>6986880/in-lisp-how-do-i-use-the-second-value-that-the-floor-function-returns]]

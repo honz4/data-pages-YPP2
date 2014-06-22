@@ -1,0 +1,2 @@
+======defun======
+  * [[so>11212717/why-defun-is-not-the-same-as-setq-name-lambda?rq=1]]

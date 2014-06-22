@@ -1,0 +1,46 @@
+======class======
+[[clhs>Body/m_defcla.htm#defclass|defclass]]
+<code lisp>
+(defclass klas (superklas ...) (
+  slot1
+  (slot2 :initform 1)
+  ))
+</code>
+
+======slot======
+(slot-value self 'slot-name) ;place, lze použít setf
+
+  slot-specifier::= slot-name | (slot-name [[slot-option]])
+  slot-name::= symbol
+  slot-option::= {:reader reader-function-name}* | 
+                 {:writer writer-function-name}* | 
+                 {:accessor reader-function-name}* | 
+                 {:allocation allocation-type} | 
+                 {:initarg initarg-name}* | 
+                 {:initform form} | 
+                 {:type type-specifier} | 
+                 {:documentation string} 
+
+  * [[clhs>Body/04_bc.htm|type specifires]]
+  * [[so>18120542/understanding-type-specifiers-in-common-lisp]]
+  * [[clhs>Body/m_check_.htm|check-type]]
+  * [[clhs>Body/s_the.htm|the]]
+
+======method======
+[[clhs>Body/m_defmet.htm|defmethod]]
+<code lisp>
+(defmethod meth1 ((self klas) ...)
+  ...
+  self;#return
+  )
+</code>
+
+======super======
+(call-next-method)  "super"
+
+======constructor======
+(defmethod initialize-instance ((self class) &key) ;"konstruktor"
+  ...)
+
+======types======
+  * [[clhs>Body/04_bc.htm|type specifires]]

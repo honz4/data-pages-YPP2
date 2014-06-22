@@ -1,9 +1,7 @@
 ;; -*- mode: lisp; encoding: utf-8; -*-
 ; vim: fenc=utf-8
 
-;;;
-;;; Třída shape
-;;;
+;======Třída shape======
 
 (defclass shape ()
   ((color :initform :black)
@@ -67,9 +65,7 @@
   (do-draw shape))
 
 
-;;;
-;;; Třída point
-;;;
+;======Třída point======
 
 (defclass point (shape) 
   ((x :initform 0) 
@@ -154,9 +150,7 @@
     pt))
 
 
-;;;
-;;; Třída circle
-;;;
+;======Třída circle======
 
 (defclass circle (shape) 
   ((center :initform (make-instance 'point)) 
@@ -195,9 +189,7 @@
   c)
 
 
-;;;
-;;; Třída compound-shape
-;;;
+;======Třída compound-shape======
 
 (defclass compound-shape (shape)
   ((items :initform '())))
@@ -239,9 +231,7 @@
   shape)
 
 
-;;;
-;;; Třída picture
-;;;
+;======Třída picture======
 
 (defclass picture (compound-shape)
   ((propagate-color-p :initform nil)))
@@ -286,9 +276,7 @@
   pic)
 
 
-;;;
-;;; Třída polygon
-;;;
+;======Třída polygon======
 
 (defclass polygon (compound-shape)
   ((closedp :initform t)))
@@ -322,17 +310,13 @@
   poly)
 
 
-;;;
-;;; empty-shape
-;;;
+;======empty-shape======
 
 (defclass empty-shape (shape)
   ())
 
 
-;;;
-;;; full-shape
-;;;
+;======full-shape======
 
 (defclass full-shape (shape)
   ())
@@ -348,9 +332,7 @@
   shape)
 
 
-;;;
-;;; Třída window
-;;;
+;======Třída window======
 
 (defclass window ()
   ((mg-window :initform (mg:display-window))
@@ -383,7 +365,7 @@
       (draw (shape window))))
   window)
 
-
+;testovaci main
 #|
 (setf win (make-instance 'window))
 
@@ -395,5 +377,3 @@
 (scale circ 1/2 (center circ))
 (move circ 100 100)
 |#
-
-

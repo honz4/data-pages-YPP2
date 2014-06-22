@@ -1,0 +1,4 @@
+======SBCL======
+[[http://www.sbcl.org/|SBCL]] [[wp>Sbcl]] nesovisí se Železnou bankou v Gotku!
+  * [[so>12182529/what-is-style-warning-implicitly-creating-new-generic-function-in-lisp]]
+  * [[l1sp>sbcl]]

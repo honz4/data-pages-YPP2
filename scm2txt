@@ -1,0 +1,53 @@
+#!/bin/sh
+#konverze .scm -> dokuwiki
+#\
+exec tclsh8.5 "$0" ${1:+"$@"}
+
+puts [fconfigure stdout -encoding]
+
+set sources [expr {[llength $argv] ? $argv : [glob *.scm]}]
+
+array set C {.scm scheme .rkt scheme .lisp lisp}
+foreach scm $sources {
+  set ext [file extension $scm]
+  set fscm [open $scm r]
+  close stdout ; open $scm.txt w+
+  puts stderr $scm.txt
+  foreach {doc code state} {"" "" #} break
+  set eof 0
+  while {!$eof} {
+    set n [gets $fscm line]
+    if {[eof $fscm]} {set eof 1}
+    if {[regexp {^;+(.*)$} $line -> docline]} {
+       switch -- $state {
+       d { lappend doc $docline }
+      \# { puts "======$scm======"
+           puts "<code shell>[join $code \n]</code>" ; set state d; set doc [list $docline] }
+       default {
+           if {[string length [string trim [join $code ""]]]} {
+           puts "<code $C($ext)>\n[join $code \n]\n</code>"
+           } else {
+           puts [join $code \n]
+           }
+           set state d
+           set doc [list $docline]
+       }}
+    } else {
+       switch -- $state {
+       d {
+           puts [join $doc \n]
+           set state c
+           set code [list $line]
+       }
+       default {
+         if {$eof} { puts "<code $C($ext)>\n[join $code \n]\n</code>"
+         } else    { lappend code $line }
+       }}
+    }
+#   puts stderr $state:$line
+  }
+  close $fscm
+# break
+}
+
+# vim: syntax=tcl

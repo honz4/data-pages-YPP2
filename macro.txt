@@ -1,0 +1,3 @@
+======makra======
+všechno **def**//neco// jsou makra (pomocí makra [[so#defmacro]]?
+  * [[https://www.it.uu.se/edu/course/homepage/avfunpro/ht10/notes/html/f05-macros.html]]

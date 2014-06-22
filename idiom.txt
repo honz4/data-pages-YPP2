@@ -1,0 +1,22 @@
+======idiomy======
+======alias======
+alias pro funkci (abstrakční bariéra) viz [[PAPR1:L4#str103]]
+<code scheme>
+(define prvni-koren car)
+</code>
+v Lisp to není tak jednoduché:
+  * [[so>20187823/how-do-i-define-a-function-that-creates-a-function-alias]]
+  * [[http://www.lispforum.com/viewtopic.php?f=2&t=93|define macro alias]]
+====== funcall ======
+v Lisp musime kvůli hodnotové a fční vazbě symbolu:
+  * funcall
+  * function, tj #'name
+  * symbol-function
+<code lisp>
+(define prvni car) ;scheme
+(setf (symbol-function 'prvni) #'car)
+</code>
+====== map ======
+viz [[clhs>Body/f_mapc_.htm]]
+====== foldr ======
+[[clhs>Body/f_reduce.htm]]
