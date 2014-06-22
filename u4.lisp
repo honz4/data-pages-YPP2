@@ -10,54 +10,50 @@
 ;======Třída 7-segment======
 ;Vytvořte třídu 7-segment, která bude reprezentovat jednu sedmisegmentovku.
 ;Třída bude potomek třídy picture a bude mít tyto sloty: 
-;value:
+;=====value:=====
 ;Bude reprezentovat hodnotu, která se má zobrazit. 
-;on-p:
+;=====on-p:=====
 ;Bude indikovat, zda je sedmisegmentovka zapnutá nebo vypnutá (vypnutná
 ;sedmisegmentovka ale má stále hodnotu ve slotu value). 
 (defclass 7-segment (picture)
   ((value :initform 0)
    (on-p  :initform nil)
    ))
-;   _____
-;   __0__
-;| |     | |
-;|1|     |2|
-;| |     | |
-;   _____
-;   __3__
-;| |     | |
-;|4|     |5|
-;| |     | |
-;   _____
-;   __6__
+;     _____
+;     __0__
+;  | |     | |
+;  |1|     |2|
+;  | |     | |
+;     _____
+;     __3__
+;  | |     | |
+;  |4|     |5|
+;  | |     | |
+;     _____
+;     __6__
 (defmethod initialize-instance ((self 7-segment) &key)
   ;jsme potomkem picture, do .items nacpeme segmenty
   )
 
 
-;Metody: 
-
-;segments: 
-
-
+;======Metody: ======
+;=====segments: =====
 ;Vrátí segmenty sedmisegmentovky (ta bude reprezentována osmi polygony, tj. sedmi 
 ;segmenty a podkladovým polygonem). 
 
-;set-segments: 
-
-
+;=====set-segments: =====
 ;Nastaví (tj. rozsvítí nebo zhasne) jednotlivé segmenty sedmisegmentovky. Vyberte si, jak 
 ;budete hodnoty pro jednotlivé segmenty reprezentovat. Jedna možnost je reprezentace
 ;seznamem hodnot t a nil, kde každá hodnota odpovídá jednomu segmentu, t značí 
 ;rozsvícený segment, nil zhasnutý segment. 
 
 
-;set-on a set-off: 
+;=====set-on=====
+;=====set-off=====
 ;Zapne, resp. vypne sedmisegmentovku 
 
 
-;set-value: 
+;=====set-value=====
 ;Nastaví hodnotu, přípustné hodnoty jsou 0-9 
 
 
@@ -66,7 +62,7 @@
 ;počet segmentů je šest. 
 
 
-;Třída: segment-display
+;======Třída segment-display======
 ;Třída segment-display nebude mít žádné sloty (kromě zděděných, pochopitelně). 
 (defclass segment-display () ;superclass?
   ()
@@ -74,25 +70,24 @@
 
 ;Metody: 
 
-;segment-count: 
-;Zjistí počet sedmisegmentovek displeje (počet sedmisegmentovek gmentů není třeba 
+;=====segment-count: =====
+;Zjistí počet sedmisegmentovek displeje (počet sedmisegmentovek segmentů není třeba 
 ;ukládat do slotu, dá se dynamicky zjistit z items). 
 
 
-;set-segment-count: 
+;=====set-segment-count: =====
 ;Nastaví počet sedmisegmentovek a provede reset. 
 
 
-;reset: 
+;=====reset: =====
 ;Provede reset displeje, tj. nastaví každý sedmisegment na nil 
 
 
-;value: 
-
+;=====value: =====
 ;Vrátí seznam hodnot v sedmisegmentech. Nespecifikované sedmisegmenty budou mít 
 ;hodnotu NIL. Poznámka: opět nemáme slot na hodnotu, kterou dynamicky zjistíme zhodnot jednotlivých sedmisegmentů. 
 
-;set-value: 
+;=====set-value: =====
 ;Nastaví hodnoty sedmisegmentů podle zadaného seznamu hodnot.
 ;Jednotlivé hodnoty seinterpretují zleva doprava, pokud je seznam hodnot kratší než je počet segmentů,
 ;pak sezadané hodnoty zarovnají doprava (napříjklad pro seznam hodnot '(1 2 3 4) budou u 
@@ -104,7 +99,6 @@
 
 ;CL-USER 47 > (setf w (make-instance 'window)) 
 ;#<WINDOW 201088E3> 
-
 
 
 ;CL-USER 48 > (set-shape w (make-instance 'segment-display)) 
@@ -165,7 +159,3 @@
 
 ;CL-USER 62 > (redraw w) 
 ;#<WINDOW 210C66A7> 
-
-
-
-;

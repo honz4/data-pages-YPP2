@@ -5,14 +5,14 @@
   (let (result)
     (dotimes (i 12)
       (setf result 
-      	    (cons 
+            (cons 
               (rotate (mp (+  (if (oddp i) size (/ size 2))
                               (x point))
                           (y point))
-                          
+
                       (* pi 1/6 i)
                       point)
-                  result)))
+              result)))
     (set-items (make-instance 'polygon) result)))
 
 

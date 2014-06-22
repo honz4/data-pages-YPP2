@@ -1,0 +1,36 @@
+======special operator======
+Lisp speciální operátor == Scheme speciální forma, je jich 26
+  * [[clhs>Body/f_specia.htm|special-operator-p]]
+  * [[l1sp>pcl/special]]
+
+======quote======
+======if======
+======let======
+======let* ======
+======setq ======
+
+======progn======
+======multiple-value-prog1======
+======progv======
+======unwind-protect======
+
+======block======
+======return-from======
+======tagbody======
+======go======
+======catch======
+======throw======
+
+======flet======
+======labels======
+======function ======
+======multiple-value-call ======
+
+======macrolet ======
+======symbol-macrolet ======
+======function ======
+
+======the ======
+======eval-when ======
+======locally ======
+======load-time-value ======
