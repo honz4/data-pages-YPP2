@@ -14,6 +14,3 @@
                       point)
               result)))
     (set-items (make-instance 'polygon) result)))
-
-
-                  
