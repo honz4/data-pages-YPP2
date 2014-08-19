@@ -115,38 +115,55 @@ exec sbcl --noinform --load $0 --end-toplevel-options "$@"
 (bin2dec '(0 1 0 1 1)) ;=>11
 (bin2dec '(0 1 1 0 1 1 1)) ;=>55
 (bin2dec '(1 1 0 0)) ;=>12
+(format t "bin2dec 1 0 1 1 => ~D~%" (bin2dec '(1 0 1 1)))
 
 ;5.Napište proceduru euclid, která zjistí největšího společného dělitele dvou zadaných
 ;čísel pomocí Euklidova algoritmu pro hledání NSD. Popis viz. http://cs.wikipedia.org/wiki/Euklidův_algoritmus. Řešení založte na rekurzi.
+;a>=b! while (a!=0) { r = rem a/b ; a=b; b=r; }
 (defun euclid (a b)
-  (/ a b)
-  )
+  (if (zerop b)
+    a
+    (euclid b (rem a b))))
+
 (euclid 12 4) ;=>4
 (euclid 12 5) ;=>1
 (euclid 12 6) ;=>6
-(euclid 666 36) ;=>18
+(format t "gcd 666 36 => ~D~%" (euclid 666 36)) ;=>18
 
 ;6.Napište proceduru leibniz-pi, která provede odhad čísla pí pomocí Leibnizovy řady,
 ;popis viz http://en.wikipedia.org/wiki/Leibniz_formula_for_pi. Řešení založte na rekurzi.
+(defun leibniz-pi%acc (n i j sum)
+  (if (> n i)
+    (leibniz-pi%acc n (+ i 1) (+ j 2) (if (oddp i)
+                                        (- sum (/ 1 j))
+                                        (+ sum (/ 1 j))))
+    sum
+  ))
 (defun leibniz-pi (n)
-  (if (> n 10) 3.1415926 3.14)
+    (* 4 (leibniz-pi%acc n 0 1 0.0))
   )
+;honza: pouzit [[so:labels]] viz [[http://www.cliki.net/fibonacci]]
+
 (leibniz-pi 10) ;=>3.232315809405594
 (leibniz-pi 100) ;=>3.1514934010709914
 (leibniz-pi 2000) ;=>3.1420924036835256
 (leibniz-pi 20000) ;=>3.1416426510898874
-(leibniz-pi 200000) ;=>3.141597653564762
-
+(format t "leibniz-pi 200000 ~D~%" (leibniz-pi 200000)) ;=>3.141597653564762
 ;Poznámka: kvůli zaokrouhlovacím chybám vám mohou vycházet mírně odlišné výsledky odhadu čísla pí.
+
 ;7.Napište proceduru perfect?, která zjistí zda zadané číslo je tzv. dokonalým číslem, to
 ;jest takovým, které je součtem všech svých dělitelů kromě sebe sama. Například 6 je
 ;dokonalé číslo, protože jeho děliteli jsou 3, 2 a 1, přičemž platí, že 3+2+1=6.
 (defun perfect? (n)
-  (if (> n 0) t nil)
+  (= n (loop for i from 1 to (/ n 2)
+             when (zerop (rem n i))
+             summing i))
   )
 (perfect?  6) ;=>#t
 (perfect?  28) ;=>#t
 (perfect?  29) ;=>#f
 (perfect?  496) ;=>#t
+(perfect?  8182) ;=>#t
+(loop for n in '(6 28 29 496 8128 8182 33550336) do (format t "perfect? ~D ~a~%" n (perfect? n)))
 
 ; vim: syntax=lisp

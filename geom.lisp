@@ -2,7 +2,7 @@
 exec sbcl --noinform --load $0 --end-toplevel-options "$@"
 |#
 ;priklady/testy na geometrii, LOOP makro...
-;list je sudy seznam x y ... (pro polynom), vraci posunuto o x0 y0
+;list je sudy seznam x y ... (body pro polynom), vraci posunuto o x0 y0
 (defun xy-move (list x0 y0)
   (loop with i = 1
         for x in list

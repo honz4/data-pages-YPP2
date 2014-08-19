@@ -2,21 +2,6 @@
 ;; vim: fenc=utf-8
 
 ;======Třída mg-object======
-;/*
-;@startuml 09.png
-;class mg_object {
-; -delegate : bool
-; -events :    list
-; -change-level : int
-; delegate() : mg-object
-; delegate() : mg-object
-; set-delegate(mg-object)
-; events() : list
-; set-events(list) : mg-object
-; canonicalize-events(events) : list
-;}
-;@enduml
-;*/
 (defclass mg-object () 
   ((delegate :initform nil)
    (events :initform '())
@@ -104,20 +89,6 @@
                      ,@msg-args))
 
 ;======Třída shape======
-;/*
-;@startuml 09.png
-;class shape <|-- mg_object
-;class shape {
-; -color : color
-; -thickness : int
-; -filledp   : bool
-; -window    : mg-window
-; window() : mg-window
-; set-window(mg-window) : shape
-;}
-;@enduml
-;*/
-
 (defclass shape (mg-object)
   ((color :initform :black)
    (thickness :initform 1)
@@ -208,18 +179,11 @@
   (send-event shape 'ev-mouse-down shape button position))
 
 ;======Třída point======
-;/*
-;@startuml 09.png
-;class point <|-- shape
-;@enduml
-;*/
-
 (defclass point (shape) 
   ((x :initform 0) 
    (y :initform 0)))
 
-;Čtení a nastavování základních data (sloty, polární souřadnice)
-
+ ;;Čtení a nastavování základních data (sloty, polární souřadnice)
 (defmethod x ((point point)) 
   (slot-value point 'x)) 
 
@@ -275,8 +239,7 @@
     (set-r-phi point (r point) value) 
     value))
 
-;Transformace
-
+ ;;Transformace
 (defmethod do-move ((pt point) dx dy)
   (set-x pt (+ (x pt) dx))
   (set-y pt (+ (y pt) dy))
@@ -296,9 +259,8 @@
     (set-r pt (* (r pt) coeff))
     (move pt cx cy)))
 
-;Kreslení
-
-;; U bodu kreslíme plnou kružnici s poloměrem rovným thickness
+ ;;Kreslení
+ ;;U bodu kreslíme plnou kružnici s poloměrem rovným thickness
 (defmethod set-mg-params ((pt point))
   (call-next-method)
   (mg:set-param (shape-mg-window pt) :filledp t))
@@ -309,19 +271,12 @@
                   (y (y pt)) 
                   (thickness pt)))
 
-;Události
-
+ ;;Události
 (defmethod contains-point-p ((shape point) point)
   (<= (point-sq-dist shape point) 
       (sqr (thickness shape))))
 
 ;======Třída circle======
-;/*
-;@startuml 09.png
-;class circle <|-- shape
-;@enduml
-;*/
-
 (defclass circle (shape) 
   ((center :initform (make-instance 'point)) 
    (radius :initform 1)))
@@ -343,15 +298,13 @@
     (set-delegate center c))
   c)
 
-;; Kreslení
-
+ ;; Kreslení
 (defmethod do-draw ((c circle))
   (mg:draw-circle (shape-mg-window c)
                   (x (center c))
                   (y (center c))
                   (radius c)))
-;; Transformace
-
+ ;; Transformace
 (defmethod do-move ((c circle) dx dy)
   (move (center c) dx dy)
   c)
@@ -365,8 +318,7 @@
   (set-radius c (* (radius c) coeff))
   c)
 
-;; Události:
-
+ ;; Události:
 (defmethod ev-changing ((c circle) sender message 
 			&rest message-args)
   (changing c 'ev-changing sender message message-args))
@@ -386,12 +338,6 @@
          (<= sq-dist (sqr (radius circle))))))
 
 ;======compound-shape======
-;/*
-;@startuml 09.png
-;class compound_shape <|-- shape
-;@enduml
-;*/
-
 (defclass compound-shape (shape)
   ((items :initform '())))
 
@@ -402,7 +348,7 @@
   (dolist (item (items shape))
     (apply message item arguments)))
 
-(defmethod check-item ((shape compound-shape) item)
+(defmethod check-item ((shape compound-shape) item) ;abstract
   (error "Method check-item has to be rewritten"))
 
 (defmethod check-items ((shape compound-shape) item-list)
@@ -422,8 +368,7 @@
     (do-set-items shape value))
   shape)
 
-;; Transformace
-
+ ;; Transformace
 (defmethod do-move ((shape compound-shape) dx dy)
   (send-to-items shape #'move dx dy)
   shape)
@@ -436,8 +381,7 @@
   (send-to-items shape #'scale coeff center)
   shape)
 
-;; Události
-
+ ;; Události
 (defmethod ev-changing ((cs compound-shape) sender message 
 			&rest message-args)
   (changing cs 'ev-changing sender message message-args))
@@ -447,23 +391,10 @@
   (change cs 'ev-change sender message message-args))
 
 ;======Třída picture======
-;/*
-;@startuml 09.png
-;class picture <|-- compound_shape
-;class picture {
-; -propagate-color-p : bool
-;  propagate-color-p() : bool
-;}
-;@enduml
-;*/
-
 (defclass picture (compound-shape)
   ((propagate-color-p :initform nil)))
 
-;;
-;; Sloty atd.
-;;
-
+ ;; Sloty atd.
 (defmethod propagate-color-p ((p picture))
   (slot-value p 'propagate-color-p))
 
@@ -499,18 +430,12 @@
   (send-to-items pic #'set-window value)
   (call-next-method))
 
-;;
-;; Kreslení
-;;
-
+ ;; Kreslení
 (defmethod do-draw ((pic picture))
   (dolist (item (reverse (items pic)))
     (draw item)))
 
-;;
-;; Události
-;;
-
+ ;; Události
 (defmethod mouse-down ((p picture) button position)
   (let ((item (find-if (lambda (it) 
 			 (contains-point-p it position)) 
@@ -527,18 +452,11 @@
 	     (contains-point-p it point))
 	   (items pic)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; Trída polygon
-;;;
-
+;====== Trída polygon======
 (defclass polygon (compound-shape)
   ((closedp :initform t)))
 
-;;
-;; Sloty
-;;
-
+ ;; Sloty
 (defmethod check-item ((p polygon) item)
   (unless (typep item 'point)
     (error "Invalid polygon element type.")))
@@ -550,10 +468,7 @@
   (with-change (p 'set-closed-p value)
     (setf (slot-value p 'closedp) value)))
 
-;;
-;; Kreslení
-;;
-
+ ;;Kreslení
 (defmethod set-mg-params ((poly polygon)) 
   (call-next-method)
   (mg:set-param (shape-mg-window poly) :closedp (closedp poly)))
@@ -566,10 +481,7 @@
     (mg:draw-polygon (shape-mg-window poly) 
                      coordinates)))
 
-;;
-;; contains-point-p pro polygon je trochu sloĹľitÄ›jĹˇĂ­
-;;
-
+ ;;contains-point-p pro polygon je trochu složitější
 (defun scalar-product (v1 v2)
   (apply #'+ (mapcar #'* v1 v2)))
 
@@ -657,19 +569,11 @@
                                 items)))))
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; empty-shape
-;;;
-
+;====== empty-shape======
 (defclass empty-shape (shape)
   ())
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; full-shape
-;;;
-
+;====== full-shape======
 (defclass full-shape (shape) 
   ())
 
@@ -682,11 +586,7 @@
 (defmethod contains-point-p ((shape full-shape) point)
   t)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; Třída window
-;;;
-
+;====== Třída window======
 (defclass window (mg-object)
   ((mg-window :initform (mg:display-window))
    shape
@@ -752,10 +652,7 @@
   (when (contains-point-p (shape w) position)
     (mouse-down (shape w) button position)))
 
-;;
-;; Události
-;;
-
+ ;;Události
 (defmethod ev-change ((w window) sender message &rest args)
   (invalidate w))
 
@@ -770,7 +667,3 @@
 (scale circ 1/2 (center circ))
 (move circ 100 100)
 |#
-
-
-
-

@@ -21,7 +21,7 @@
 
 (define (power-list k n)
  (apply map *
-;;(display
+ ;(display
          (map
            (lambda (r)
              (build-list n (lambda (i)

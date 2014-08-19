@@ -1,0 +1,10 @@
+(change-directory "~/Documents/GitHub/data-pages-YPP2/micro-graphics")
+(load "../micro-graphics/load.lisp")
+
+(setf w1 (mg:display-window))
+(setf w2 (mg:make-offscreen-window w1 250 255))
+(mg:set-param w2 :foreground :blue)
+(mg:set-param w2 :filledp t)
+(mg:draw-circle w2 100 100 50)
+(mg:draw-window w1 w2)
+(mg:close-window w2)

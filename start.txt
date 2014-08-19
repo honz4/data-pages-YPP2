@@ -1,9 +1,18 @@
   * [[07.lisp]]
-  * [[4.scm]]
-  * [[buildlist]]
-  * [[clos]]
-  * [[micro-graphics]]
+  * [[09.lisp]] [[text-shape.lisp]]
+  * [[u1.lisp]] [[4.scm]]
+  * [[u2.lisp]]
+  * [[u3.lisp]]
   * [[u4.lisp]]
+  * [[micro-graphics]]
+
+  * [[idiom]]
+  * [[def]]
+  * [[clos]]
+  * [[so]]
+  * [[macro]]
+  * [[values]]
+  * [[buildlist]]
 
 
   * [[clhs>Body/c_data_a.htm|Data a Control flow dictionary]]
