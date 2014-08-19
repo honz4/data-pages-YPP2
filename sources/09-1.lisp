@@ -1,0 +1,27 @@
+(defmethod initialize-instance ((w window) &key)
+  (call-next-method)
+  (install-callbacks w)
+  w)
+
+(defmethod install-callbacks ((w window))
+  (mg:set-callback (slot-value w 'mg-window)
+		   :display (lambda (mgw)
+                              (declare (ignore mgw))
+                              (redraw w)))
+  (mg:set-callback (slot-value w 'mg-window) 
+		   :mouse-down (lambda (mgw button x y)
+				 (declare (ignore mgw))
+				 (send-mouse-down w button x y)))
+  w)
+
+(defun send-mouse-down (window button x y)
+  (let ((pt (make-instance 'point)))
+    (move pt x y)
+    (window-mouse-down window button pt)))
+
+(defmethod window-mouse-down ((w window) button position)
+  nil)
+
+(defmethod invalidate ((w window))
+  (mg:invalidate (slot-value w 'mg-window))
+  w)
