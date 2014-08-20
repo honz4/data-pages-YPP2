@@ -1,0 +1,19 @@
+Zadání
+Naprogramujte tøídu -- checklist.
+
+Požadavky:
+
+  * bude mít seznam položek, které je možno kliknutim zaškrtnout a odskrtnout
+  * zaškrtnutí a odskrtnoutí položky vyvolá událost (viz demo.lisp)
+  * použijte kód [[.:09.lisp]], needitujte ho
+  * na zobrazení textu použijte text-shape.lisp
+  * kód [[demo.lisp]] by mìl býl kompatibilní s vašim kódem
+  * nemusíte øešit transformace rotate a scale
+  * move by ale mìlo být funkèní.
+  * žádné warningy
+
+
+Odevzdání:
+
+* øešení buïto pošlete na mùj e-mail nebo doneste na notebooku èi flashdisku.
+* nemusíte k øešení vyrábìt jakoukoli dokumentaci.
