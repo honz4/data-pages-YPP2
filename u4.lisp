@@ -42,11 +42,11 @@
 (loop with pi2 = (/ pi 2)
    ;posunuti a pootoceni jednotlivych segmentu
    ;                   0   1   2   3   4   5   6
-      for dx in '(     0   0  80   0   0  80   0)
-      for dy in '(     0   0   0  80  80  80  160)
+      for dx in '(     5   5  75   5   5  75   5)
+      for dy in '(     5   5   5  75  75  75  145)
       for fi in (list  0 pi2 pi2   0 pi2 pi2   0)
   collect
-  (let ((points (loop for x in '(10 20 80 90 80 20);souradnice segmentu
+  (let ((points (loop for x in '(10 20 70 80 70 20);souradnice segmentu
 		      for y in '(10  0  0 10 20 20)
 		  collect (set-x (set-y (make-instance 'point) y) x))))
 	(move
@@ -57,18 +57,26 @@
 ))
    ;podkladovy polygon:
    (list (set-items (set-filledp (set-color (make-instance 'polygon) :black) t)
-     (loop for (x . y) in '((0 . 0) (100 . 0) (100 . 180) (0 . 180))
+     (loop for (x . y) in '((0 . 0) (100 . 0) (100 . 170) (0 . 170))
        collect (set-y (set-x (make-instance 'point) x) y))))
 ))
 self
 )
 
+;cislice cisla, rekurze
+(defun digits (n &optional (radix 10) (digits nil))
+  (if (< n radix)
+      (cons n digits)
+      (multiple-value-bind (n d) (floor n radix)
+         (digits n radix (cons d digits)))))
+
 ;======Metody: ======
 ;=====segments: =====
 ;Vrátí segmenty sedmisegmentovky (ta bude reprezentována osmi polygony,
 ;tj. sedmi segmenty a podkladovým polygonem). 
+;honza: pouzijeme butlast (posledni podklad nas nezajima) nebo loop?
 (defmethod segments ((self 7-segment))
-  self
+  (butlast (items self))
 )
 
 ;=====set-segments: =====
@@ -79,10 +87,9 @@ self
 ;t značí rozsvícený segment, nil zhasnutý segment.
 ;todo: pouzit segments(), blokovat on-p? 
 (defmethod set-segments ((self 7-segment) segments)
-  (loop for n from 1 to 7
-        for s in segments
-        for item in (items self)
-   do (set-color item (if s :red :grey)))
+  (loop for s in segments
+        for poly in (segments self)
+        do (set-color poly (if s :red :grey)))
   self
 )
 
@@ -91,24 +98,48 @@ self
 ;Zapne, resp. vypne sedmisegmentovku 
 ;honza: tj. manipulace s .on-p slotem?
 (defmethod set-on ((self 7-segment))
-  self
+  (let ((on (slot-value self 'on-p)))
+    (unless on
+          (setf on t)
+          (set-segments self
+              (case (slot-value self 'value)
+              (0 '(t   t   t   t   t   t   t  ))
+              (1 '(nil nil t   nil nil t   nil))
+              (2 '(t   nil t   t   t   nil t  ))
+              (3 '(t   nil t   t   nil t   t  ))
+              (4 '(nil t   t   t   nil t   nil))
+              (5 '(t   t   nil t   nil t   t  ))
+              (6 '(t   t   nil t   t   t   t  ))
+              (7 '(t   nil nil t   nil t   nil))
+              (8 '(t   t   t   t   t   t   t  ))
+              (9 '(t   t   t   t   nil t   t  )))))
+  self)
 )
 ;=====set-off=====
 (defmethod set-off ((self 7-segment))
-  self
+  (let ((on (slot-value self 'on-p)))
+    (when on
+          (setf on nil)
+          (set-segments self '(nil nil nil nil nil nil nil)))
+    self)
 )
 
 ;=====set-value=====
 ;Nastaví hodnotu, přípustné hodnoty jsou 0-9 
+;honza: nerozvecet/nezhasinat?
 (defmethod set-value ((self 7-segment) value)
+  (unless (typep value '(integer 0 9)) (error "hodnota neni v rozsahu 0-9!"))
+  (setf (slot-value self 'value) value)
+  self
 )
 
 #|test/demo
-(let ((win (make-instance 'window)) pic)
-  (set-shape win (make-instance '7-segment))
-  (set-segments (shape win) '(t t t nil nil t))
+  (setf win (make-instance 'window))
+  (setf 7s  (make-instance '7-segment))
+  (set-shape win 7s)
+ ;(set-segments 7s '(t t t nil nil t))
+  (set-on (set-value 7s 9))
   (redraw win)
-)
 |#
 
 ;======Třída segment-display======
@@ -129,7 +160,6 @@ self
   self
 )
 
-#|
 ;=====segment-count: =====
 ;Zjistí počet sedmisegmentovek displeje (počet sedmisegmentovek segmentů není třeba 
 ;ukládat do slotu, dá se dynamicky zjistit z items). 
@@ -138,8 +168,11 @@ self
 )
 
 ;=====set-segment-count: =====
-;Nastaví počet sedmisegmentovek a provede reset. 
-(defmethod set-segment-count ((self segment-display))
+;Nastaví počet sedmisegmentovek a provede reset.
+;udelame set-items a/nebo push/pop na items?
+(defmethod set-segment-count ((self segment-display) n)
+   (set-items self (loop for i from 0 below n
+                    collect (move (make-instance '7-segment) (* i 100) 0)))
    (reset self)
 )
 
@@ -151,14 +184,13 @@ self
       )
 )
 
-
 ;=====value: =====
 ;Vrátí seznam hodnot v sedmisegmentech.
 ;Nespecifikované sedmisegmenty budou mít hodnotu NIL.
 ;Poznámka: opět nemáme slot na hodnotu, kterou dynamicky zjistíme zhodnot jednotlivých sedmisegmentů. 
 (defmethod value ((self segment-display))
   (loop for item in (items self)
-     collect (value item))
+     collect (slot-value item 'value))
 )
 
 ;=====set-value: =====
@@ -170,7 +202,12 @@ self
 ;dále budou následovat hodnoty 1, 2, 3, a 4.
 ;Při pokusu o nastavení většího počtu hodnot než displej obsahuje sedmisegmentovek, musí být signalizována chyba. 
 (defmethod set-value ((self segment-display) values)
-   self
+ (let ((count (segment-count self)))
+   (when (> (length values) count) (error "maly display"))
+   (loop for value in values
+         for 7-seg in (items self)
+         do (set-value 7-seg value))
+   self)
 )
 
 ;set-on, set-off: 
@@ -184,38 +221,25 @@ self
    (dolist (item (items self)) (set-off item) )
    self
 )
+
+#|
+ (setf w (make-instance 'window))
+ (set-shape w (make-instance 'segment-display))
+
+ (set-value (shape w) '(1 2 3 4)) 
+ (redraw w) 
+
+ (value (shape w)) ;=>(NIL NIL 1 2 3 4) 
+
+ (set-segment-count (shape w) 4);zkratime 6->4 
+ (redraw w) 
+
+ (set-value (shape w) '(9 0)) 
+ (redraw w) 
+
+ (set-off (shape w)) 
+ (redraw w) 
+
+ (set-on (shape w)) 
+ (redraw w) 
 |#
-
-;CL-USER 51 > (set-value (shape w) '(1 2 3 4)) 
-;#<SEGMENT-DISPLAY 200D922F> 
-
-;CL-USER 52 > (redraw w) 
-;#<WINDOW 201088E3> 
-
-;CL-USER 53 > (value (shape w)) 
-;(NIL NIL 1 2 3 4) 
-
-;CL-USER 54 > (set-segment-count (shape w) 4) 
-;#<SEGMENT-DISPLAY 200D922F> 
-
-
-;CL-USER 55 > (redraw w) 
-;#<WINDOW 201088E3> 
-
-;CL-USER 57 > (set-value (shape w) '(9 0)) 
-;#<SEGMENT-DISPLAY 200D922F> 
-
-;CL-USER 58 > (redraw w) 
-;#<WINDOW 210C66A7> 
-
-;CL-USER 59 > (set-off (shape w)) 
-;#<SEGMENT-DISPLAY 200D922F> 
-
-;CL-USER 60 > (redraw w) 
-;#<WINDOW 210C66A7> 
-
-;CL-USER 61 > (set-on (shape w)) 
-;#<SEGMENT-DISPLAY 200D922F> 
-
-;CL-USER 62 > (redraw w) 
-;#<WINDOW 210C66A7> 

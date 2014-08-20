@@ -151,6 +151,7 @@
 #|
 (setf stars (make-instance 'eu-stars))
 (setf w (make-instance 'window))
+(set-background w :blue)
 (set-shape w stars)
 (set-color stars :yellow)
 |#
